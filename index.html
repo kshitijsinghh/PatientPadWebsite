@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PatientPad — Dental Clinic Management Software | Your Data, Your Google Account</title>
+<meta name="description" content="Dental clinic management software where patient data stays in your own Google Sheet. E-prescriptions on your letterhead, tooth charting, receipts and scheduling.">
+<link rel="canonical" href="https://patientpad.in/">
+<meta name="theme-color" content="#0e3b39">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PatientPad">
+<meta property="og:locale" content="en_IN">
+<meta property="og:title" content="PatientPad — Your clinic's data never leaves your Google account">
+<meta property="og:description" content="Dental practice management for Indian clinics. Prescriptions, payments, appointments and lab work in one console. Records stay in your own Google Sheet.">
+<meta property="og:url" content="https://patientpad.in/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PatientPad — Dental Clinic Management Software">
+<meta name="twitter:description" content="Your clinic's data never leaves your Google account. E-prescriptions, tooth charting, receipts and scheduling in one console.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&amp;family=Hanken+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://patientpad.in/#org","name":"PatientPad","url":"https://patientpad.in/","email":"teamdocmind@gmail.com"},{"@type":"SoftwareApplication","name":"PatientPad","applicationCategory":"MedicalApplication","operatingSystem":"Web browser","publisher":{"@id":"https://patientpad.in/#org"},"description":"Dental clinic management software for India. Patient data stays in the clinic's own Google Sheet, Drive and Calendar.","featureList":"E-prescription on clinic letterhead, FDI tooth charting, payment receipts, payment tracker, appointment scheduling with Google Calendar, dental lab management, patient self check-in"},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Where is my patient data stored?","acceptedAnswer":{"@type":"Answer","text":"In your clinic's own Google account. The patient register is a Google Sheet in your Google Drive, files such as X-rays sit in your Drive, and appointments go to your Google Calendar. PatientPad does not keep a central database of patient records."}},{"@type":"Question","name":"Can I export my patient records?","acceptedAnswer":{"@type":"Answer","text":"Yes, any time. The register is already a Google Sheet you own, so you can open it, filter it, or download it as Excel or CSV directly from Google. There is no export request to make."}},{"@type":"Question","name":"What happens to my data if I stop using PatientPad?","acceptedAnswer":{"@type":"Answer","text":"Nothing happens to it. Your complete patient history stays in your own Google Drive, readable in Google Sheets without PatientPad."}},{"@type":"Question","name":"Does it work on a tablet or phone?","acceptedAnswer":{"@type":"Answer","text":"Yes. PatientPad runs in the browser on the front desk laptop, the dentist's tablet, or a phone. There is nothing to install."}},{"@type":"Question","name":"Can I use my own clinic letterhead for prescriptions?","acceptedAnswer":{"@type":"Answer","text":"Yes. Prescriptions and payment receipts print on your clinic's own designed letterhead, as paper or PDF."}},{"@type":"Question","name":"How long does setup take?","acceptedAnswer":{"@type":"Answer","text":"We set up your console with you: connect your Google account, create the patient register in your Drive, and add your letterhead. There is no per-seat training programme."}},{"@type":"Question","name":"Does it work for a multi-dentist clinic?","acceptedAnswer":{"@type":"Answer","text":"Yes. The front desk and every dentist in the clinic work from the same console, and all records go to the clinic's one Google account."}}]}]}</script>
+<script>
+  // "js" enables the interactive bits; "motion" gates every scroll/entrance animation's
+  // hidden start state, so no-JS and reduced-motion visitors always see the finished page.
+  (function (r) {
+    r.classList.add('js');
+    try { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) r.classList.add('motion'); } catch (e) {}
+  })(document.documentElement);
+</script>
+<style>
+:root{
+  --primary:#0e756c;--deep:#0e3b39;--bright:#12a094;--mint:#7fd4c9;
+  --page:#eef4f3;--surface:#f7fbfa;--muted:#5c7a76;--line:#dfece9;--on-dark:#cfe5e1;
+  --display:'Bricolage Grotesque',sans-serif;--body:'Hanken Grotesk',system-ui,sans-serif;--mono:ui-monospace,Menlo,monospace;
+}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--page);color:var(--deep);font-family:var(--body);-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:var(--primary)}
+a:hover{color:var(--deep)}
+:focus-visible{outline:3px solid var(--bright);outline-offset:3px;border-radius:6px}
+summary::-webkit-details-marker{display:none}
+button{font-family:inherit}
+.wrap{max-width:1200px;margin:0 auto;padding-left:24px;padding-right:24px}
+.eyebrow{margin:0;font:600 13px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--primary)}
+.h2{margin:0;font:700 clamp(30px,3.6vw,44px)/1.08 var(--display);letter-spacing:-.02em;text-wrap:balance}
+.h2-sm{margin:0;font:700 clamp(26px,3vw,34px)/1.1 var(--display);letter-spacing:-.015em}
+.sec-head{display:flex;flex-direction:column;gap:14px;max-width:720px;margin-bottom:48px}
+[id]{scroll-margin-top:60px}
+
+/* Buttons */
+.btn{text-decoration:none;font-weight:600;border-radius:14px;display:inline-block}
+.btn-primary{background:var(--primary);color:var(--surface);font-size:17px;padding:15px 26px;box-shadow:0 6px 18px -8px rgba(14,117,108,.6)}
+.btn-primary:hover{background:var(--deep);color:var(--surface)}
+.btn-secondary{background:var(--surface);color:var(--deep);font-size:17px;padding:15px 26px;border:1px solid var(--line)}
+.btn-secondary:hover{border-color:var(--bright);color:var(--deep)}
+
+/* Header */
+.site-header{position:sticky;top:0;z-index:20;background:rgba(238,244,243,.9);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.site-header nav{padding-top:14px;padding-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--deep)}
+.brand-mark{width:30px;height:30px;border-radius:9px;background:var(--primary);display:grid;place-items:center;color:var(--surface);font:700 16px var(--display)}
+.brand-name{font:700 20px var(--display);letter-spacing:-.01em}
+.nav-links{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.nav-links a{text-decoration:none;font-weight:500;font-size:15px;color:var(--deep)}
+.nav-links a.nav-cta{background:var(--primary);color:var(--surface);font-weight:600;padding:10px 18px;border-radius:12px}
+.nav-links a.nav-cta:hover{background:var(--deep);color:var(--surface)}
+
+/* Hero */
+.hero{padding-top:72px;padding-bottom:40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:56px;align-items:center}
+.hero-copy{display:flex;flex-direction:column;gap:24px}
+.hero h1{margin:0;font:700 clamp(38px,5.4vw,64px)/1.02 var(--display);letter-spacing:-.025em;color:var(--deep);text-wrap:balance}
+.hero h1 .sub{display:block;margin-top:24px;font:500 clamp(19px,2vw,22px)/1.4 var(--body);letter-spacing:0;color:var(--deep);text-wrap:pretty}
+.hero-lede{margin:0;font-size:17px;line-height:1.6;color:var(--muted);max-width:34em;text-wrap:pretty}
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap;padding-top:4px}
+.hero figure{margin:0}
+.console{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:0 30px 60px -30px rgba(14,59,57,.35),0 2px 6px rgba(14,59,57,.05);overflow:hidden}
+.console-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);background:#fff}
+.dots{display:flex;gap:6px}
+.dots span{width:9px;height:9px;border-radius:50%;background:var(--line)}
+.console-title{font:500 12px var(--mono);color:var(--muted)}
+.console-pill{font:600 11px var(--body);color:var(--primary);background:var(--page);padding:4px 8px;border-radius:999px}
+.console-body{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;padding:18px}
+.console-left{display:flex;flex-direction:column;gap:14px}
+.mini-label{font:600 12px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.hero-arch{display:grid;grid-template-columns:repeat(8,1fr);gap:4px}
+.hero-arch span{height:34px;border-radius:7px 7px 11px 11px;border:1px solid var(--line);background:#fff;color:var(--muted);display:grid;place-items:end center;padding-bottom:4px;font:600 10px var(--mono)}
+.hero-arch .lit{background:var(--bright);color:var(--surface);border-color:var(--bright);transform:translateY(-3px);animation:ppTooth 6.5s ease infinite}
+.hero-chip-row{min-height:34px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.hero-chip{font:600 13px var(--mono);background:var(--primary);color:var(--surface);padding:7px 11px;border-radius:9px;animation:ppChip 6.5s ease infinite}
+.hero-chip-note{font-size:13px;color:var(--muted);animation:ppFade 6.5s ease infinite}
+.field{height:30px;border-radius:9px;background:#fff;border:1px solid var(--line);padding:0 10px;display:flex;align-items:center;font-size:13px;color:var(--deep)}
+.field.muted{color:var(--muted)}
+.fields{display:flex;flex-direction:column;gap:8px}
+.hero-rx{position:relative;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px;min-height:230px;animation:ppRx 6.5s cubic-bezier(.2,.8,.2,1) infinite}
+.rx-head{border-bottom:2px solid var(--primary);padding-bottom:8px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.rx-head b{font:700 14px var(--display);color:var(--deep)}
+.rx-head span{font:500 10px var(--mono);color:var(--muted)}
+.rx-tag{font:600 13px var(--mono);color:var(--primary)}
+.rx-med{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--deep)}
+.rx-med span+span{color:var(--muted);padding-left:14px}
+.rx-foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted)}
+.rx-foot b{font-weight:600;color:var(--primary)}
+.hero figcaption{margin-top:12px;font-size:14px;color:var(--muted);text-align:center}
+/* The hero loop (6.5s = five 1.3s beats): tooth lights at beat 1, chip at 2, prescription at 3.
+   Base styles are the finished frame, which is what reduced-motion visitors see. */
+@keyframes ppTooth{0%,20%,100%{background:#fff;color:var(--muted);border-color:var(--line);transform:none}26%,94%{background:var(--bright);color:var(--surface);border-color:var(--bright);transform:translateY(-3px)}}
+@keyframes ppChip{0%,40%,100%{opacity:0;transform:translateY(6px)}46%,94%{opacity:1;transform:none}}
+@keyframes ppFade{0%,40%,100%{opacity:0}46%,94%{opacity:1}}
+@keyframes ppRx{0%,60%,100%{opacity:.25;transform:translateX(18px)}69%,91%{opacity:1;transform:none}}
+
+.trust{padding-bottom:72px}
+.trust p{margin:0;padding-top:20px;border-top:1px solid var(--line);display:flex;gap:10px 24px;flex-wrap:wrap;font-size:15px;color:var(--muted)}
+
+/* Data ownership */
+.dark{background:var(--deep);color:var(--surface)}
+.data-grid{padding-top:104px;padding-bottom:104px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:64px;align-items:center}
+.data-copy{display:flex;flex-direction:column;gap:36px}
+.data-copy .eyebrow{color:var(--mint)}
+.data-copy h2{margin:0;font:700 clamp(32px,4vw,48px)/1.06 var(--display);letter-spacing:-.02em;text-wrap:balance}
+.data-head{display:flex;flex-direction:column;gap:18px}
+.points{display:flex;flex-direction:column;gap:28px}
+.point{display:grid;grid-template-columns:28px 1fr;gap:14px}
+.point>span{font:600 13px var(--mono);color:var(--mint);padding-top:4px}
+.point h3{margin:0 0 6px;font:600 21px var(--display)}
+.point p{margin:0;font-size:16px;line-height:1.6;color:var(--on-dark)}
+.flow-fig{margin:0}
+.flow{max-width:500px;margin:0 auto;display:flex;flex-direction:column;align-items:center}
+.node-clinic{background:rgba(247,251,250,.06);border:1px solid rgba(127,212,201,.3);border-radius:16px;padding:14px 22px;text-align:center}
+.node-clinic b{display:block;font:600 17px var(--display)}
+.node-sub{font-size:13px;color:var(--on-dark);margin-top:2px}
+.wire{position:relative;width:2px;background:rgba(127,212,201,.35)}
+.pulse{position:absolute;left:-4px;width:10px;height:10px;border-radius:50%;background:var(--mint);box-shadow:0 0 12px var(--mint);animation:ppDown 2.4s linear infinite}
+.node-console{background:var(--primary);border-radius:16px;padding:16px 26px;text-align:center;animation:ppBreathe 2.4s ease-in-out infinite}
+.node-console b{display:block;font:700 18px var(--display)}
+.node-console .node-sub{color:#e3f3f0}
+.dests{position:relative;width:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.dests::before{content:"";position:absolute;top:0;left:16.66%;right:16.66%;height:2px;background:rgba(127,212,201,.35)}
+.dest{display:flex;flex-direction:column;align-items:center}
+.dest-card{width:100%;background:var(--surface);color:var(--deep);border-radius:14px;padding:14px 8px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}
+.dest-card .your{font:700 11px var(--body);letter-spacing:.1em;color:var(--primary)}
+.dest-card .name{font:600 14px var(--display);line-height:1.15}
+.ico-sheet{display:grid;grid-template-columns:repeat(3,7px);gap:2px}
+.ico-sheet i{height:7px;background:var(--bright);border-radius:1px}
+.ico-sheet i:nth-child(n+4){background:var(--mint)}
+.ico-drive{width:22px;height:16px;border-radius:3px 3px 4px 4px;border:2px solid var(--bright);border-top-width:5px}
+.ico-cal{width:18px;height:18px;border-radius:4px;border:2px solid var(--bright);border-top-width:6px}
+.no-server{margin-top:34px;display:flex;align-items:center;gap:14px;border:1.5px dashed rgba(207,229,225,.45);border-radius:14px;padding:12px 18px}
+.no-ico{position:relative;width:22px;height:22px;border-radius:50%;border:2px solid var(--on-dark);flex:none}
+.no-ico::after{content:"";position:absolute;left:-3px;right:-3px;top:8px;height:2px;background:var(--on-dark);transform:rotate(-45deg)}
+.no-server p{margin:0;font-size:14px;color:var(--on-dark);line-height:1.4}
+.no-server s{color:var(--surface);font-weight:600}
+@keyframes ppDown{0%{top:-6px;opacity:0}15%{opacity:1}85%{opacity:1}100%{top:calc(100% - 4px);opacity:0}}
+@keyframes ppBreathe{0%,100%{box-shadow:0 0 0 0 rgba(127,212,201,.35)}50%{box-shadow:0 0 0 10px rgba(127,212,201,0)}}
+
+/* Features */
+.features{padding-top:104px;padding-bottom:48px}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:14px;transition:opacity .6s ease var(--d,0s),transform .6s ease var(--d,0s),border-color .2s}
+.card:hover{border-color:var(--mint)}
+.motion .feat-grid:not(.is-in) .card{opacity:0;transform:translateY(18px)}
+.card h3{margin:0;font:600 19px/1.2 var(--display)}
+.card p{margin:0;font-size:15px;line-height:1.55;color:var(--muted)}
+.card code{font:600 13px var(--mono);color:var(--deep)}
+.viz{height:118px;border-radius:12px;background:#fff;border:1px solid var(--line);padding:12px;display:flex;flex-direction:column}
+/* 1 · prescription */
+.viz-rx{gap:6px}
+.viz-rx .head{height:10px;width:55%;border-radius:3px;background:var(--primary)}
+.viz-rx hr{height:1px;border:0;background:var(--line);margin:2px 0}
+.viz-rx .ln{height:7px;border-radius:3px;background:var(--line);transition:width .5s ease}
+.viz-rx .ln1{width:40%}.viz-rx .ln2{width:30%;transition-delay:.08s}.viz-rx .ln3{width:20%;transition-delay:.16s}
+.card:hover .viz-rx .ln1{width:80%}.card:hover .viz-rx .ln2{width:65%}.card:hover .viz-rx .ln3{width:72%}
+.viz-rx .pdf{margin-top:auto;align-self:flex-end;font:600 10px var(--mono);color:var(--primary)}
+/* 2 · charting */
+.viz-chart{justify-content:center;gap:10px}
+.viz-chart .row{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
+.viz-chart .row span{height:30px;border-radius:6px 6px 10px 10px;border:1px solid var(--line);background:var(--surface);color:var(--muted);display:grid;place-items:end center;padding-bottom:3px;font:600 9px var(--mono);transition:background .3s ease,color .3s}
+.card:hover .viz-chart .on{background:var(--primary);color:var(--surface)}
+.viz-chart .line{font:600 11px var(--mono);color:var(--primary);opacity:0;transition:opacity .3s}
+.card:hover .viz-chart .line{opacity:1}
+/* 3 · WhatsApp */
+.viz-wa{background:var(--page);justify-content:flex-end;gap:6px;overflow:hidden}
+.viz-wa .in{align-self:flex-start;max-width:85%;background:#fff;border-radius:10px 10px 10px 3px;padding:7px 10px;font-size:12px;line-height:1.35;color:var(--deep)}
+.viz-wa .out{align-self:flex-end;background:var(--mint);border-radius:10px 10px 3px 10px;padding:6px 10px;font-size:12px;color:var(--deep);opacity:0;transform:translateY(14px);transition:opacity .35s ease,transform .35s ease}
+.card:hover .viz-wa .out{opacity:1;transform:none}
+/* 4 · receipt */
+.viz-receipt{padding:10px 12px;gap:3px;font-size:11.5px;line-height:1.3;color:var(--deep)}
+.viz-receipt div{display:flex;justify-content:space-between}
+.viz-receipt .rh{font:600 10px var(--mono);color:var(--muted)}
+.viz-receipt .total{margin-top:auto;border-top:1px solid var(--line);padding-top:5px;font-weight:600}
+/* 5 · payment tracker */
+.viz-pay{justify-content:space-between}
+.viz-pay .top{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+.viz-pay .track{height:6px;border-radius:3px;background:var(--page);overflow:hidden}
+.viz-pay .fill{height:100%;background:var(--bright);width:60%}
+.viz-pay .bottom{display:flex;justify-content:space-between;align-items:baseline}
+.viz-pay .bottom span{font-size:12px;color:var(--muted)}
+.viz-pay .bottom b{font:700 24px var(--display);color:var(--deep)}
+/* 6 · appointments */
+.viz-cal{gap:8px}
+.viz-cal .when{font:600 10px var(--mono);color:var(--muted)}
+.viz-cal .evt{border-left:3px solid var(--bright);background:var(--page);border-radius:4px 8px 8px 4px;padding:8px 10px;font-size:12px;color:var(--deep)}
+.viz-cal .sync{margin-top:auto;font-size:12px;font-weight:600;color:var(--primary);opacity:.3;transition:opacity .3s}
+.card:hover .viz-cal .sync{opacity:1}
+/* 7 · lab */
+.viz-lab{gap:6px;font-size:12px;color:var(--deep)}
+.viz-lab div{display:grid;grid-template-columns:1.2fr .6fr .6fr 1fr;gap:6px}
+.viz-lab .th{font:600 9px var(--mono);color:var(--muted)}
+/* 8 · reconciliation */
+.viz-rec{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;font-size:12px;color:var(--deep)}
+.viz-rec .side{display:flex;flex-direction:column;gap:3px}
+.viz-rec .side:last-child{text-align:right}
+.viz-rec .k{font:600 9px var(--mono);color:var(--muted)}
+.viz-rec .side b{font-weight:600}
+.viz-rec .mark{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-weight:700;background:var(--page);color:var(--muted);transition:background .3s,color .3s}
+.viz-rec .ok,.card:hover .viz-rec .idle{display:none}
+.card:hover .viz-rec .ok{display:inline}
+.card:hover .viz-rec .mark{background:var(--bright);color:#fff}
+.extras{margin-top:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.extras div{background:var(--page);padding:20px}
+.extras h3{margin:0 0 4px;font:600 16px var(--display)}
+.extras p{margin:0;font-size:14px;line-height:1.5;color:var(--muted)}
+.coming-soon{margin-top:16px;border:1.5px dashed var(--line);border-radius:18px;padding:18px 20px;display:none;gap:10px 28px;flex-wrap:wrap;align-items:baseline}
+.coming-soon .label{font:600 12px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--primary)}
+.coming-soon p{margin:0;font-size:15px;color:var(--deep)}
+.coming-soon strong{font-weight:600}
+.coming-soon p span{color:var(--muted)}
+/* Add class "unconfirmed-soon" to #features to move WhatsApp + reconciliation into the Coming soon strip. */
+.unconfirmed-soon .card-unconfirmed{display:none}
+.unconfirmed-soon .coming-soon{display:flex}
+
+/* Try the chart */
+.chart-sec{padding-top:56px;padding-bottom:104px}
+.chart-box{background:#fff;border:1px solid var(--line);border-radius:18px;padding:clamp(20px,4vw,40px);display:flex;flex-direction:column;gap:28px}
+.chart-top{display:flex;justify-content:space-between;gap:16px 32px;flex-wrap:wrap;align-items:flex-end}
+.chart-intro{display:flex;flex-direction:column;gap:8px;max-width:520px}
+.chart-intro p{margin:0;font-size:16px;line-height:1.55;color:var(--muted)}
+.seg{display:flex;background:var(--page);border-radius:12px;padding:4px;gap:4px}
+.seg button{border:0;cursor:pointer;border-radius:9px;padding:9px 14px;font:600 14px var(--body);background:transparent;color:var(--deep)}
+.seg button[aria-pressed="true"]{background:#fff;box-shadow:0 1px 3px rgba(14,59,57,.12)}
+.treats{display:flex;gap:8px;flex-wrap:wrap}
+.treats button{cursor:pointer;display:flex;align-items:center;gap:8px;border-radius:999px;padding:9px 16px;font:600 14px var(--body);border:1.5px solid var(--line);background:#fff;color:var(--deep)}
+.treats button[aria-pressed="true"]{border-color:var(--c);background:var(--page)}
+.treats button i{width:10px;height:10px;border-radius:50%;background:var(--c)}
+.mouth-scroll{overflow-x:auto;padding-bottom:4px}
+.mouth{min-width:560px;display:flex;flex-direction:column;gap:10px}
+.quad-labels{display:flex;justify-content:space-between;font:600 11px var(--mono);color:var(--muted);letter-spacing:.06em}
+.arch{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.quad{display:flex;gap:5px}
+.quad.right{justify-content:flex-end}
+.midline{height:1px;background:var(--line);margin:4px 0}
+.tooth{flex:1 1 0;max-width:46px;height:56px;cursor:pointer;border:1.5px solid var(--line);background:var(--surface);color:var(--deep);display:flex;flex-direction:column;align-items:center;gap:2px;font:600 12px var(--mono);transition:background .2s,transform .2s}
+.tooth.up{border-radius:10px 10px 16px 16px;justify-content:flex-end;padding:0 0 6px}
+.tooth.down{border-radius:16px 16px 10px 10px;justify-content:flex-start;padding:6px 0 0}
+.tooth[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:var(--fg);transform:translateY(-2px)}
+.tooth .tag{font-size:9px;opacity:.9}
+.rx-out{border-top:2px solid var(--primary);background:var(--surface);border-radius:0 0 14px 14px;padding:18px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.rx-out>div{display:flex;flex-direction:column;gap:6px;min-width:0}
+.rx-out .label{font:600 11px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.rx-out output{font:600 clamp(15px,2vw,19px)/1.4 var(--mono);color:var(--deep);overflow-wrap:anywhere}
+.rx-out output.empty{color:var(--muted)}
+.btn-clear{cursor:pointer;background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 14px;font:600 14px var(--body);color:var(--deep)}
+.btn-clear:hover{border-color:var(--bright)}
+
+/* How it works */
+.how{background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.how .wrap{padding-top:104px;padding-bottom:104px}
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
+.step{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:16px;transition:border-color .4s}
+.step.is-active,html:not(.motion) .step:last-child{border-color:var(--bright)}
+.step-bar{height:4px;border-radius:2px;background:var(--page);overflow:hidden}
+.step-bar i{display:block;height:100%;background:var(--bright);width:100%}
+.motion .step-bar i{width:0}
+.step-viz{background:var(--page);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px;min-height:132px}
+.step-viz .f{background:#fff;border-radius:8px;padding:7px 10px;font-size:13px;color:var(--muted)}
+.step-viz .f.ink{color:var(--deep)}
+.step-viz .f.code{font:600 13px var(--mono);color:var(--primary)}
+.step-viz .pair{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.step-viz .go{background:var(--primary);color:var(--surface);text-align:center;font-weight:600}
+.step-viz.print{flex-direction:row;gap:10px;align-items:flex-end;justify-content:center;overflow:hidden}
+.paper{width:42%;background:#fff;border-radius:6px;padding:8px;display:flex;flex-direction:column;gap:5px;box-shadow:0 6px 14px -8px rgba(14,59,57,.3);transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.paper+.paper{transition-delay:.15s}
+.motion .how:not(.is-printed) .paper{transform:translateY(110%)}
+.paper b{font:600 9px var(--mono);color:var(--primary)}
+.paper i{height:5px;background:var(--line);border-radius:2px}
+.step-name{display:flex;gap:12px;align-items:baseline}
+.step-name span{font:600 13px var(--mono);color:var(--primary)}
+.step-name h3{margin:0;font:600 20px var(--display)}
+
+/* Proof */
+.proof{padding-top:96px;padding-bottom:96px}
+.proof h2{margin-bottom:36px}
+.stats{margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));border-top:1px solid var(--line)}
+.stats div{padding:28px 24px 0 0;display:flex;flex-direction:column-reverse;gap:6px}
+.stats dt{font-size:16px;color:var(--muted)}
+.stats dd{margin:0;font:700 clamp(48px,6vw,72px)/1 var(--display);color:var(--primary);font-variant-numeric:tabular-nums}
+
+/* FAQ */
+.faq{padding-top:40px;padding-bottom:104px;display:flex;flex-wrap:wrap;gap:40px 64px}
+.faq-head{flex:1 1 280px;display:flex;flex-direction:column;gap:14px}
+.faq-list{flex:2 1 480px;min-width:0;display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{cursor:pointer;list-style:none;padding:20px 0;display:flex;justify-content:space-between;gap:16px;font:600 18px/1.3 var(--display)}
+.faq summary h3{margin:0;font:inherit}
+.faq summary span{color:var(--primary)}
+.faq details p{margin:0 0 22px;font-size:16px;line-height:1.6;color:var(--muted);max-width:40em}
+
+/* Closing CTA + footer */
+.closing{max-width:880px;margin:0 auto;padding:112px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:22px}
+.closing h2{margin:0;font:700 clamp(32px,4.4vw,52px)/1.06 var(--display);letter-spacing:-.02em;text-wrap:balance}
+.closing p{margin:0;font-size:18px;line-height:1.55;color:var(--on-dark);max-width:34em}
+.btn-mint{margin-top:8px;text-decoration:none;background:var(--mint);color:var(--deep);font-weight:700;font-size:18px;padding:17px 32px;border-radius:14px}
+.btn-mint:hover{background:var(--surface);color:var(--deep)}
+.site-footer{background:var(--deep);border-top:1px solid rgba(127,212,201,.2);color:var(--on-dark)}
+.site-footer .wrap{padding-top:28px;padding-bottom:28px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:14px}
+.site-footer strong{font:700 16px var(--display);color:var(--surface)}
+
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none !important;transition:none !important}}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <nav aria-label="Main" class="wrap">
+    <a href="#top" class="brand">
+      <span class="brand-mark" aria-hidden="true">P</span>
+      <span class="brand-name">PatientPad</span>
+    </a>
+    <div class="nav-links">
+      <a href="#data">Your data</a>
+      <a href="#features">Features</a>
+      <a href="#faq">FAQ</a>
+      <a href="#book" class="nav-cta">Book a demo</a>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+  <section aria-labelledby="hero-h" class="wrap hero">
+    <div class="hero-copy">
+      <p class="eyebrow">Dental clinic management software for India</p>
+      <h1 id="hero-h">Your clinic's data never leaves your Google account.<span class="sub">Dental clinic management that runs on software you already trust.</span></h1>
+      <p class="hero-lede">Prescriptions, payments, appointments and lab work — in one console. The records stay in your own Google Sheet, where you can see them, export them, or walk away with them at any time.</p>
+      <div class="hero-ctas">
+        <a href="#book" class="btn btn-primary">Book a demo</a>
+        <a href="#how" class="btn btn-secondary">See how it works</a>
+      </div>
+    </div>
+
+    <figure aria-label="PatientPad console demo">
+      <div class="console" role="img" aria-label="PatientPad console: the dentist taps upper right central incisor, tooth 11, on the FDI dental chart, a root canal treatment tag RCT: 11 is added, and the prescription on the clinic letterhead updates beside it.">
+        <div class="console-bar">
+          <div class="dots"><span></span><span></span><span></span></div>
+          <span class="console-title">Visit · Patient #0412</span>
+          <span class="console-pill">Saved to your Sheet</span>
+        </div>
+        <div class="console-body">
+          <div class="console-left">
+            <div class="mini-label">Upper arch · FDI</div>
+            <div class="hero-arch">
+              <span>18</span><span>17</span><span>16</span><span>15</span><span>14</span><span>13</span><span>12</span><span class="lit">11</span>
+              <span>21</span><span>22</span><span>23</span><span>24</span><span>25</span><span>26</span><span>27</span><span>28</span>
+            </div>
+            <div class="hero-chip-row">
+              <span class="hero-chip">RCT: 11</span>
+              <span class="hero-chip-note">Treatment tagged</span>
+            </div>
+            <div class="fields">
+              <div class="field">Amoxicillin 500 mg</div>
+              <div class="field muted">1-0-1 · 5 days · after food</div>
+            </div>
+          </div>
+          <div class="hero-rx">
+            <div class="rx-head"><b>Your clinic letterhead</b><span>Rx</span></div>
+            <div class="rx-tag">RCT: 11</div>
+            <div class="rx-med"><span>1. Amoxicillin 500 mg</span><span>1-0-1 × 5 days, after food</span></div>
+            <div class="rx-med"><span>2. Ibuprofen 400 mg</span><span>SOS for pain</span></div>
+            <div class="rx-foot"><span>Next visit · Thu 10:30</span><b>Print · PDF</b></div>
+          </div>
+        </div>
+      </div>
+      <figcaption>Tap a tooth. Tag the treatment. The prescription writes itself.</figcaption>
+    </figure>
+  </section>
+
+  <div class="wrap trust">
+    <p><span>Live in 10+ clinics</span><span aria-hidden="true">·</span><span>600+ patient visits</span><span aria-hidden="true">·</span><span>400+ prescriptions generated</span></p>
+  </div>
+
+  <section id="data" aria-labelledby="data-h" class="dark">
+    <div class="wrap data-grid">
+      <div class="data-copy">
+        <div class="data-head">
+          <p class="eyebrow">Where your records live</p>
+          <h2 id="data-h">The data moves one way: out to your own account.</h2>
+        </div>
+        <div class="points">
+          <article class="point">
+            <span>01</span>
+            <div><h3>You own the file.</h3><p>The patient register is a Google Sheet in your Drive. Open it, filter it, download it as Excel, any time — no export request, no waiting.</p></div>
+          </article>
+          <article class="point">
+            <span>02</span>
+            <div><h3>No central patient database.</h3><p>We do not pool clinics' records. There is no single store to breach.</p></div>
+          </article>
+          <article class="point">
+            <span>03</span>
+            <div><h3>No lock-in.</h3><p>Stop using PatientPad tomorrow and your complete patient history is still sitting in your own Drive, readable without us.</p></div>
+          </article>
+        </div>
+      </div>
+
+      <figure class="flow-fig">
+        <div class="flow" role="img" aria-label="Diagram: patient data flows from your clinic into the PatientPad console, and from the console out to your own Google Sheet, Google Drive and Google Calendar. PatientPad's own servers receive no patient records.">
+          <div class="node-clinic"><b>Your clinic</b><div class="node-sub">Front desk · Dentist</div></div>
+          <div class="wire" style="height:56px"><span class="pulse"></span></div>
+          <div class="node-console"><b>PatientPad console</b><div class="node-sub">Writes to your account. Keeps no copy.</div></div>
+          <div class="wire" style="height:28px"></div>
+          <div class="dests">
+            <div class="dest">
+              <div class="wire" style="height:44px"><span class="pulse" style="animation-delay:1.2s"></span></div>
+              <div class="dest-card"><span class="ico-sheet" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="your">YOUR</span><span class="name">Google Sheet</span></div>
+            </div>
+            <div class="dest">
+              <div class="wire" style="height:44px"><span class="pulse" style="animation-delay:1.35s"></span></div>
+              <div class="dest-card"><span class="ico-drive" aria-hidden="true"></span><span class="your">YOUR</span><span class="name">Google Drive</span></div>
+            </div>
+            <div class="dest">
+              <div class="wire" style="height:44px"><span class="pulse" style="animation-delay:1.5s"></span></div>
+              <div class="dest-card"><span class="ico-cal" aria-hidden="true"></span><span class="your">YOUR</span><span class="name">Google Calendar</span></div>
+            </div>
+          </div>
+          <div class="no-server">
+            <span class="no-ico" aria-hidden="true"></span>
+            <p><s>PatientPad servers</s> — never receive your patient records.</p>
+          </div>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <section id="features" aria-labelledby="feat-h" class="wrap features">
+    <div class="sec-head">
+      <p class="eyebrow">What you get</p>
+      <h2 id="feat-h" class="h2">Everything the front desk and the dentist do in a day, in one console.</h2>
+    </div>
+
+    <div class="feat-grid" id="feat-grid">
+      <article class="card" style="--d:0s">
+        <div class="viz viz-rx" aria-hidden="true">
+          <div class="head"></div><hr>
+          <div class="ln ln1"></div><div class="ln ln2"></div><div class="ln ln3"></div>
+          <div class="pdf">PDF ↓</div>
+        </div>
+        <h3>E-prescription on your own letterhead</h3>
+        <p>Fill the form, hit generate. The prescription comes out on the clinic's own designed letterhead, with the medicines, dosage, duration and instructions laid out. Print it or hand over a PDF. Empty fields simply don't appear.</p>
+      </article>
+
+      <article class="card" style="--d:.07s">
+        <div class="viz viz-chart" aria-hidden="true">
+          <div class="row"><span>13</span><span class="on">12</span><span class="on">11</span><span>21</span><span>22</span><span>23</span></div>
+          <div class="line">RCT: 11, 12</div>
+        </div>
+        <h3>Tooth-by-tooth clinical charting</h3>
+        <p>Tag exactly which teeth each treatment applies to, on a real FDI dental chart — permanent and primary. The prescription prints <code>RCT: 11, 12 · Scaling: 21</code>, not a vague list.</p>
+      </article>
+
+      <article class="card card-unconfirmed" style="--d:.14s">
+        <div class="viz viz-wa" aria-hidden="true">
+          <div class="in">Reminder: your appointment is tomorrow at 11:00 AM.</div>
+          <div class="out">Confirmed, thank you</div>
+        </div>
+        <h3>WhatsApp automation</h3>
+        <p>Reach patients where they already are — appointment reminders and follow-ups, without anyone typing them out by hand.</p>
+      </article>
+
+      <article class="card" style="--d:.21s">
+        <div class="viz viz-receipt" aria-hidden="true">
+          <div class="rh"><span>RECEIPT No. 0142</span><span>LETTERHEAD</span></div>
+          <div><span>Treatment</span><span>₹3,000</span></div>
+          <div><span>X-ray</span><span>₹300</span></div>
+          <div><span>OPD</span><span>₹200</span></div>
+          <div class="total"><span>Total</span><span>₹3,500</span></div>
+        </div>
+        <h3>Payment receipts</h3>
+        <p>Numbered receipts on the clinic's letterhead, split by line item — treatment, X-ray, OPD, medicine, lab work, or your own custom heads.</p>
+      </article>
+
+      <article class="card" id="pay-card" style="--d:.28s">
+        <div class="viz viz-pay" aria-hidden="true">
+          <div class="top"><span>Billed ₹6,000</span><span>Paid <span data-pay="paid">₹3,600</span></span></div>
+          <div class="track"><div class="fill" data-pay="bar"></div></div>
+          <div class="bottom"><span>Pending</span><b data-pay="pending">₹2,400</b></div>
+        </div>
+        <h3>Payment tracker</h3>
+        <p>Total billed, paid, and pending per patient, with balances carried forward across visits. See at a glance who owes what, without a separate ledger.</p>
+      </article>
+
+      <article class="card" style="--d:.35s">
+        <div class="viz viz-cal" aria-hidden="true">
+          <div class="when">THU · 10:30</div>
+          <div class="evt">Next visit · RCT sitting 2</div>
+          <div class="sync">✓ Synced to your Google Calendar</div>
+        </div>
+        <h3>Appointment scheduling</h3>
+        <p>Next appointments sync straight into the clinic's Google Calendar. The reminder lands on the phone the dentist already carries.</p>
+      </article>
+
+      <article class="card" style="--d:.42s">
+        <div class="viz viz-lab" aria-hidden="true">
+          <div class="th"><span>WORK</span><span>TOOTH</span><span>SHADE</span><span>LAB</span></div>
+          <div><span>Zirconia crown</span><span>36</span><span>A2</span><span>Lab 1</span></div>
+          <div><span>PFM bridge</span><span>24–26</span><span>A3</span><span>Lab 2</span></div>
+        </div>
+        <h3>Dental lab &amp; vendor management</h3>
+        <p>Track what went to which lab, for which tooth, with the shade and material noted against the visit it belongs to.</p>
+      </article>
+
+      <article class="card card-unconfirmed" style="--d:.49s">
+        <div class="viz viz-rec" aria-hidden="true">
+          <div class="side"><span class="k">LAB BILL</span><span>3 items</span><b>₹4,200</b></div>
+          <span class="mark"><span class="idle">↔</span><span class="ok">✓</span></span>
+          <div class="side"><span class="k">WORK SENT</span><span>3 items</span><b>₹4,200</b></div>
+        </div>
+        <h3>Bill reconciliation</h3>
+        <p>Match lab bills against the work actually sent, so nothing is paid twice and nothing is missed.</p>
+      </article>
+    </div>
+
+    <div class="extras">
+      <div><h3>Patient self check-in portal</h3><p>Patients check themselves in from their phone and get a queue number.</p></div>
+      <div><h3>X-rays and reports</h3><p>Attached to the visit they belong to.</p></div>
+      <div><h3>Runs on any device</h3><p>The front desk laptop, the dentist's tablet, a phone.</p></div>
+    </div>
+
+    <div class="coming-soon">
+      <span class="label">Coming soon</span>
+      <p><strong>WhatsApp automation</strong> <span>— reminders and follow-ups, sent for you.</span></p>
+      <p><strong>Bill reconciliation</strong> <span>— lab bills matched against work sent.</span></p>
+    </div>
+  </section>
+
+  <section aria-labelledby="chart-h" class="wrap chart-sec">
+    <div class="chart-box" id="chart">
+      <div class="chart-top">
+        <div class="chart-intro">
+          <h2 id="chart-h" class="h2-sm">Try the chart.</h2>
+          <p>Pick a treatment, then tap teeth. This is the line that prints on the prescription.</p>
+        </div>
+        <div role="group" aria-label="Dentition" class="seg">
+          <button type="button" data-dent="permanent" aria-pressed="true">Permanent</button>
+          <button type="button" data-dent="primary" aria-pressed="false">Primary</button>
+        </div>
+      </div>
+
+      <div role="group" aria-label="Treatment" class="treats">
+        <button type="button" data-treat="RCT" aria-pressed="true" style="--c:#0e756c"><i></i>RCT</button>
+        <button type="button" data-treat="Scaling" aria-pressed="false" style="--c:#12a094"><i></i>Scaling</button>
+        <button type="button" data-treat="Filling" aria-pressed="false" style="--c:#7fd4c9"><i></i>Filling</button>
+        <button type="button" data-treat="Crown" aria-pressed="false" style="--c:#0e3b39"><i></i>Crown</button>
+        <button type="button" data-treat="Extraction" aria-pressed="false" style="--c:#b4543a"><i></i>Extraction</button>
+      </div>
+
+      <div class="mouth-scroll">
+        <div class="mouth">
+          <div class="quad-labels"><span>UPPER RIGHT</span><span>UPPER LEFT</span></div>
+          <div class="arch">
+            <div class="quad right" data-quad="0"></div>
+            <div class="quad" data-quad="1"></div>
+          </div>
+          <div class="midline"></div>
+          <div class="arch">
+            <div class="quad right" data-quad="3"></div>
+            <div class="quad" data-quad="2"></div>
+          </div>
+          <div class="quad-labels"><span>LOWER RIGHT</span><span>LOWER LEFT</span></div>
+        </div>
+      </div>
+
+      <div class="rx-out">
+        <div>
+          <span class="label">On the prescription</span>
+          <output id="rx-line" aria-live="polite">RCT: 11, 12 · Scaling: 21</output>
+        </div>
+        <button type="button" class="btn-clear" id="rx-clear">Clear</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="how" aria-labelledby="how-h" class="how">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">How it works</p>
+        <h2 id="how-h" class="h2">Three steps per visit.</h2>
+      </div>
+      <ol class="steps">
+        <li class="step">
+          <div class="step-bar"><i></i></div>
+          <div class="step-viz" aria-hidden="true">
+            <div class="f">Name</div>
+            <div class="f">Phone</div>
+            <div class="pair"><div class="f">Age</div><div class="f go">Register</div></div>
+          </div>
+          <div class="step-name"><span>1</span><h3>Register the patient</h3></div>
+        </li>
+        <li class="step">
+          <div class="step-bar"><i></i></div>
+          <div class="step-viz" aria-hidden="true">
+            <div class="f ink">Diagnosis · Irreversible pulpitis</div>
+            <div class="f code">RCT: 36</div>
+            <div class="f ink">Amoxicillin 500 mg · 1-0-1 · 5 days</div>
+          </div>
+          <div class="step-name"><span>2</span><h3>Fill the doctor's form</h3></div>
+        </li>
+        <li class="step">
+          <div class="step-bar"><i></i></div>
+          <div class="step-viz print" aria-hidden="true">
+            <div class="paper"><b>PRESCRIPTION</b><i></i><i style="width:70%"></i><i style="width:85%"></i></div>
+            <div class="paper"><b>RECEIPT 0143</b><i></i><i style="width:60%"></i><i style="width:80%"></i></div>
+          </div>
+          <div class="step-name"><span>3</span><h3>Prescription and receipt print themselves</h3></div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section aria-labelledby="proof-h" class="wrap proof" id="proof">
+    <h2 id="proof-h" class="h2-sm">In use at clinics today.</h2>
+    <dl class="stats">
+      <div><dt>clinics running on it</dt><dd data-count="10">10+</dd></div>
+      <div><dt>patient visits recorded</dt><dd data-count="600">600+</dd></div>
+      <div><dt>prescriptions generated</dt><dd data-count="400">400+</dd></div>
+    </dl>
+  </section>
+
+  <section id="faq" aria-labelledby="faq-h" class="wrap faq">
+    <div class="faq-head">
+      <p class="eyebrow">FAQ</p>
+      <h2 id="faq-h" class="h2">Questions dentists ask first.</h2>
+    </div>
+    <div class="faq-list">
+      <details open><summary><h3>Where is my patient data stored?</h3><span aria-hidden="true">+</span></summary><p>In your clinic's own Google account. The patient register is a Google Sheet in your Google Drive, files such as X-rays sit in your Drive, and appointments go to your Google Calendar. PatientPad does not keep a central database of patient records.</p></details>
+      <details><summary><h3>Can I export my patient records?</h3><span aria-hidden="true">+</span></summary><p>Yes, any time. The register is already a Google Sheet you own, so you can open it, filter it, or download it as Excel or CSV directly from Google. There is no export request to make.</p></details>
+      <details><summary><h3>What happens to my data if I stop using PatientPad?</h3><span aria-hidden="true">+</span></summary><p>Nothing happens to it. Your complete patient history stays in your own Google Drive, readable in Google Sheets without PatientPad.</p></details>
+      <details><summary><h3>Does it work on a tablet or phone?</h3><span aria-hidden="true">+</span></summary><p>Yes. PatientPad runs in the browser on the front desk laptop, the dentist's tablet, or a phone. There is nothing to install.</p></details>
+      <details><summary><h3>Can I use my own clinic letterhead for prescriptions?</h3><span aria-hidden="true">+</span></summary><p>Yes. Prescriptions and payment receipts print on your clinic's own designed letterhead, as paper or PDF.</p></details>
+      <details><summary><h3>How long does setup take?</h3><span aria-hidden="true">+</span></summary><p>We set up your console with you: connect your Google account, create the patient register in your Drive, and add your letterhead. There is no per-seat training programme.</p></details>
+      <details><summary><h3>Does it work for a multi-dentist clinic?</h3><span aria-hidden="true">+</span></summary><p>Yes. The front desk and every dentist in the clinic work from the same console, and all records go to the clinic's one Google account.</p></details>
+    </div>
+  </section>
+
+  <section id="book" aria-labelledby="book-h" class="dark">
+    <div class="closing">
+      <h2 id="book-h">Your patients' records stay in your Google account. Always.</h2>
+      <p>See the console running on your own Google Sheet in a short demo.</p>
+      <a href="mailto:teamdocmind@gmail.com?subject=PatientPad%20demo" class="btn-mint">Book a demo</a>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span><strong>PatientPad</strong> · Dental clinic management software, made in India</span>
+    <span>© 2026 PatientPad</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var motion = root.classList.contains('motion');
+  var io = 'IntersectionObserver' in window;
+
+  function onView(el, fn) {
+    if (!el) return;
+    if (!io) return fn();
+    var ob = new IntersectionObserver(function (es) {
+      if (es[0].isIntersecting) { ob.disconnect(); fn(); }
+    }, { threshold: 0.2 });
+    ob.observe(el);
+  }
+
+  // Feature cards stagger in (CSS delays via --d). Fallback reveal after 4s.
+  var grid = document.getElementById('feat-grid');
+  if (motion) {
+    var reveal = function () { grid.classList.add('is-in'); };
+    onView(grid, reveal);
+    setTimeout(reveal, 4000);
+  }
+
+  // Payment tracker card: pending balance ticks down to zero on hover.
+  var inr = function (v) { return '₹' + v.toLocaleString('en-IN'); };
+  var payCard = document.getElementById('pay-card');
+  var payEls = {};
+  payCard.querySelectorAll('[data-pay]').forEach(function (el) { payEls[el.dataset.pay] = el; });
+  var pay = 2400, payRaf;
+  function drawPay() {
+    payEls.paid.textContent = inr(6000 - pay);
+    payEls.pending.textContent = inr(pay);
+    payEls.bar.style.width = ((6000 - pay) / 6000) * 100 + '%';
+  }
+  function animPay(to) {
+    cancelAnimationFrame(payRaf);
+    if (!motion) { pay = to; return drawPay(); }
+    var from = pay, t0 = performance.now();
+    (function tick(now) {
+      var p = Math.min(1, ((now || t0) - t0) / 700);
+      pay = Math.round(from + (to - from) * (1 - Math.pow(1 - p, 2)));
+      drawPay();
+      if (p < 1) payRaf = requestAnimationFrame(tick);
+    })();
+  }
+  payCard.addEventListener('mouseenter', function () { animPay(0); });
+  payCard.addEventListener('mouseleave', function () { animPay(2400); });
+
+  // Interactive FDI chart.
+  var chart = document.getElementById('chart');
+  var TR = { RCT: ['#0e756c', '#f7fbfa', 'RCT'], Scaling: ['#12a094', '#f7fbfa', 'SC'], Filling: ['#7fd4c9', '#0e3b39', 'F'], Crown: ['#0e3b39', '#f7fbfa', 'CR'], Extraction: ['#b4543a', '#fff', 'EX'] };
+  var ORDER = Object.keys(TR);
+  var QUADS = {
+    permanent: [[18,17,16,15,14,13,12,11],[21,22,23,24,25,26,27,28],[31,32,33,34,35,36,37,38],[48,47,46,45,44,43,42,41]],
+    primary: [[55,54,53,52,51],[61,62,63,64,65],[71,72,73,74,75],[85,84,83,82,81]]
+  };
+  var st = { dent: 'permanent', treat: 'RCT', rx: { 11: 'RCT', 12: 'RCT', 21: 'Scaling' } };
+  var quadEls = chart.querySelectorAll('[data-quad]');
+  var rxOut = document.getElementById('rx-line');
+
+  function paintTooth(b) {
+    var n = b.dataset.n, t = st.rx[n];
+    b.setAttribute('aria-pressed', t ? 'true' : 'false');
+    b.setAttribute('aria-label', 'Tooth ' + n + (t ? ', ' + t : ''));
+    b.querySelector('.tag').textContent = t ? TR[t][2] : '';
+    b.style.setProperty('--c', t ? TR[t][0] : '');
+    b.style.setProperty('--fg', t ? TR[t][1] : '');
+  }
+  function renderTeeth() {
+    QUADS[st.dent].forEach(function (list, qi) {
+      var upper = qi < 2, el = quadEls[qi];
+      el.textContent = '';
+      list.forEach(function (n) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'tooth ' + (upper ? 'up' : 'down');
+        b.dataset.n = n;
+        var tag = document.createElement('span');
+        tag.className = 'tag';
+        if (upper) { b.append(tag, String(n)); } else { b.append(String(n), tag); }
+        paintTooth(b);
+        el.appendChild(b);
+      });
+    });
+  }
+  function renderLine() {
+    var groups = ORDER.map(function (name) {
+      var teeth = Object.keys(st.rx).filter(function (k) { return st.rx[k] === name; }).map(Number).sort(function (a, b) { return a - b; });
+      return teeth.length ? name + ': ' + teeth.join(', ') : null;
+    }).filter(Boolean);
+    rxOut.textContent = groups.length ? groups.join(' · ') : 'Tap a tooth to start the line.';
+    rxOut.classList.toggle('empty', !groups.length);
+  }
+  function setPressed(sel, attr, val) {
+    chart.querySelectorAll(sel).forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute(attr) === val ? 'true' : 'false'); });
+  }
+
+  chart.addEventListener('click', function (e) {
+    var b = e.target.closest('button');
+    if (!b) return;
+    if (b.dataset.dent) {
+      st.dent = b.dataset.dent;
+      setPressed('[data-dent]', 'data-dent', st.dent);
+      renderTeeth();
+    } else if (b.dataset.treat) {
+      st.treat = b.dataset.treat;
+      setPressed('[data-treat]', 'data-treat', st.treat);
+    } else if (b.dataset.n) {
+      var n = b.dataset.n;
+      if (st.rx[n] === st.treat) delete st.rx[n]; else st.rx[n] = st.treat;
+      paintTooth(b);
+      renderLine();
+    } else if (b.id === 'rx-clear') {
+      st.rx = {};
+      chart.querySelectorAll('.tooth').forEach(paintTooth);
+      renderLine();
+    }
+  });
+  renderTeeth();
+
+  // How it works: the three steps cycle every 2.4s once in view.
+  var how = document.getElementById('how');
+  var steps = how.querySelectorAll('.step');
+  function setStep(i) {
+    steps.forEach(function (li, k) {
+      var bar = li.querySelector('.step-bar i');
+      li.classList.toggle('is-active', k === i);
+      bar.style.transition = 'none';
+      bar.style.width = k < i ? '100%' : '0%';
+      if (k === i) {
+        void bar.offsetWidth;
+        bar.style.transition = 'width 2.3s linear';
+        bar.style.width = '100%';
+      }
+    });
+    how.classList.toggle('is-printed', i === 2);
+  }
+  if (motion) {
+    onView(how, function () {
+      var i = 0;
+      setStep(i);
+      setInterval(function () { i = (i + 1) % 3; setStep(i); }, 2400);
+    });
+  }
+
+  // Counters count up once when scrolled into view.
+  if (motion) {
+    var dds = document.querySelectorAll('#proof [data-count]');
+    dds.forEach(function (d) { d.textContent = '0+'; });
+    onView(document.getElementById('proof'), function () {
+      var t0 = performance.now();
+      (function tick(now) {
+        var p = Math.min(1, ((now || t0) - t0) / 1400), e = 1 - Math.pow(1 - p, 3);
+        dds.forEach(function (d) { d.textContent = Math.round(d.dataset.count * e) + '+'; });
+        if (p < 1) requestAnimationFrame(tick);
+      })();
+    });
+  }
+})();
+</script>
+</body>
+</html>
