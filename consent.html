@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Consent form</title>
+<style>
+  :root{
+    --teal:#0e756c; --teal-dark:#0b5d56; --teal-pale:#e6f4f2; --line:#dbe9e6;
+    --ink:#0e3b39; --ink-soft:#5c7a76; --paper:#f4f8f7; --card:#ffffff;
+    --red:#b3261e; --amber:#8a6a1f; --amber-pale:#fff8e6; --pen:#14306b;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--paper); color:var(--ink);
+    font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans","Noto Sans Devanagari",sans-serif;
+    -webkit-text-size-adjust:100%;
+  }
+  .wrap{max-width:560px;margin:0 auto;padding:0 16px 140px}
+  .bar{background:var(--teal);color:#fff;padding:14px 16px}
+  .bar .in{max-width:560px;margin:0 auto;display:flex;align-items:center;gap:10px}
+  .bar b{font-size:16px;font-weight:700}
+  .bar span{font-size:12.5px;opacity:.85;margin-left:auto}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:14px}
+  h1{font-size:19px;line-height:1.3;margin:0 0 4px}
+  .meta{font-size:13.5px;color:var(--ink-soft);margin:0}
+  .meta b{color:var(--ink);font-weight:600}
+  .lbl{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 8px}
+  .body{font-size:15px;white-space:pre-wrap;overflow-wrap:break-word}
+  ul.risks{margin:8px 0 0;padding-left:22px;font-size:15px}
+  ul.risks li{margin:4px 0}
+  .risks-card{border-color:#f1dca6;background:var(--amber-pale)}
+  .risks-card .lbl{color:var(--amber)}
+  label.check{display:flex;gap:11px;align-items:flex-start;font-size:14.5px;cursor:pointer}
+  label.check input{width:22px;height:22px;margin:1px 0 0;flex:0 0 auto;accent-color:var(--teal)}
+  .field{margin-top:14px}
+  .field > span{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+  input[type=text], select{
+    width:100%;padding:11px 12px;font-size:16px;font-family:inherit;color:var(--ink);
+    border:1px solid var(--line);border-radius:10px;background:#fff
+  }
+  input[type=text]:focus,select:focus{outline:2px solid var(--teal-pale);border-color:var(--teal)}
+  .padbox{position:relative;margin-top:8px;border:1px solid var(--line);border-radius:12px;background:#fff;overflow:hidden}
+  .padbox.filled{border-color:var(--teal)}
+  canvas{display:block;width:100%;height:190px;touch-action:none;position:relative;z-index:2}
+  .baseline{position:absolute;left:18px;right:18px;bottom:46px;border-bottom:1px dashed #c6d8d4;z-index:1}
+  .hint{position:absolute;left:0;right:0;bottom:16px;text-align:center;font-size:13px;color:#9db5b1;z-index:1;pointer-events:none}
+  .padbar{display:flex;align-items:center;gap:12px;margin-top:8px;font-size:13px;color:var(--ink-soft)}
+  .padbar button{margin-left:auto;border:0;background:none;color:var(--teal);font:inherit;font-weight:700;cursor:pointer;padding:4px 0}
+  .foot{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.97);border-top:1px solid var(--line);
+    padding:12px 16px calc(12px + env(safe-area-inset-bottom));backdrop-filter:blur(6px);z-index:10}
+  .foot .in{max-width:560px;margin:0 auto}
+  button.go{
+    width:100%;padding:15px;border:0;border-radius:12px;background:var(--teal);color:#fff;
+    font:inherit;font-size:16px;font-weight:700;cursor:pointer
+  }
+  button.go:disabled{background:#c3d6d3;cursor:not-allowed}
+  .why{margin:8px 0 0;font-size:12.5px;color:var(--ink-soft);text-align:center;min-height:17px}
+  .why.bad{color:var(--red);font-weight:600}
+  .mid{min-height:72vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px 8px}
+  .mid .ic{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;margin-bottom:16px}
+  .mid h2{font-size:21px;margin:0 0 8px}
+  .mid p{margin:0;font-size:15px;color:var(--ink-soft);max-width:330px}
+  .ok{background:var(--teal-pale);color:var(--teal)}
+  .warn{background:var(--amber-pale);color:var(--amber)}
+  .bad{background:#fdecea;color:var(--red)}
+  .spin{width:34px;height:34px;border:3px solid var(--teal-pale);border-top-color:var(--teal);border-radius:50%;animation:s .8s linear infinite}
+  @keyframes s{to{transform:rotate(360deg)}}
+  .fine{margin:14px 0 0;font-size:12px;color:#9db5b1;text-align:center;line-height:1.5}
+  [hidden]{display:none !important}
+</style>
+</head>
+<body>
+
+<div class="bar"><div class="in"><b>Consent form</b><span id="secure">🔒 Secure link</span></div></div>
+
+<!-- loading -->
+<div id="s-load" class="mid"><div class="spin"></div></div>
+
+<!-- the form -->
+<main id="s-form" class="wrap" hidden>
+  <div class="card">
+    <h1 id="f-title"></h1>
+    <p class="meta" id="f-meta"></p>
+  </div>
+
+  <div class="card">
+    <p class="lbl">Please read</p>
+    <div class="body" id="f-body"></div>
+  </div>
+
+  <div class="card risks-card" id="f-risks-card" hidden>
+    <p class="lbl">Risks you should know</p>
+    <ul class="risks" id="f-risks"></ul>
+  </div>
+
+  <div class="card">
+    <label class="check">
+      <input type="checkbox" id="f-agree">
+      <span>I have read and understood this form. I have had the chance to ask questions, and I give my consent to the treatment described above.</span>
+    </label>
+
+    <div class="field">
+      <span>Signing as</span>
+      <select id="f-role">
+        <option value="PATIENT">The patient</option>
+        <option value="PARENT">Parent of the patient</option>
+        <option value="GUARDIAN">Guardian of the patient</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <span>Full name of the person signing</span>
+      <input type="text" id="f-name" autocomplete="name" autocapitalize="words" spellcheck="false" placeholder="Type your full name">
+    </div>
+
+    <div class="field">
+      <span>Signature</span>
+      <div class="padbox" id="f-padbox">
+        <div class="baseline"></div>
+        <div class="hint" id="f-hint">Sign here with your finger</div>
+        <canvas id="f-pad"></canvas>
+      </div>
+      <div class="padbar">
+        <span id="f-padmsg">Use your finger or a stylus</span>
+        <button type="button" id="f-clear">Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="fine">This link is for you only and can be used once.<br>Your signed copy will be sent to you on WhatsApp.</p>
+</main>
+
+<div class="foot" id="s-foot" hidden><div class="in">
+  <button class="go" id="f-submit" disabled>Submit consent</button>
+  <p class="why" id="f-why"></p>
+</div></div>
+
+<!-- terminal screens -->
+<div id="s-done" class="mid" hidden>
+  <div class="ic ok">✓</div>
+  <h2>Consent submitted</h2>
+  <p id="done-msg">Thank you. Your signed copy is on its way to you on WhatsApp.</p>
+</div>
+
+<div id="s-over" class="mid" hidden>
+  <div class="ic warn">⏳</div>
+  <h2 id="over-h"></h2>
+  <p id="over-p"></p>
+</div>
+
+<div id="s-err" class="mid" hidden>
+  <div class="ic bad">!</div>
+  <h2 id="err-h">Something went wrong</h2>
+  <p id="err-p"></p>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ---- config -------------------------------------------------------------
+  // In production the API is reached SAME-ORIGIN, through two Vercel rewrites
+  // that map /api/c/* onto the gateway. That removes CORS from the picture
+  // entirely: no wildcard Access-Control-Allow-Origin to depend on, no
+  // preflight to dodge, and the gateway id is not in the page source. Only
+  // those two public paths are mapped, so the staff routes stay unreachable
+  // from this domain.
+  //
+  // Opened from localhost or from disk there is no proxy, so fall back to
+  // calling the gateway directly — that path still relies on CORS, which is
+  // fine for testing.
+  var DIRECT = 'https://x5s4btnwek.execute-api.us-east-1.amazonaws.com';
+  var meta = document.querySelector('meta[name="pp-api"]');
+  var API = (meta && meta.content) || window.PP_API || '';
+  if (!API) {
+    var h = location.hostname;
+    var local = location.protocol === 'file:' || h === 'localhost' || h === '127.0.0.1'
+      || /^192\.168\./.test(h) || /^10\./.test(h);
+    API = local ? DIRECT : '/api';
+  }
+  API = API.replace(/\/+$/, '');
+
+  var MIN_INK = 40;          // px of pen travel before it counts as a signature
+  var MAX_BYTES = 380 * 1024; // server rejects over 400KB
+
+  // ---- token --------------------------------------------------------------
+  // Live:   patientpad.in/consent/<token>
+  // Local:  consent.html?t=<token>
+  function readToken() {
+    var q = new URLSearchParams(location.search).get('t');
+    if (q) return q.trim();
+    var segs = location.pathname.split('/').filter(Boolean);
+    var last = segs[segs.length - 1] || '';
+    if (/\.html?$/i.test(last)) return '';
+    return decodeURIComponent(last);
+  }
+  var token = readToken();
+
+  // ---- tiny dom helpers ---------------------------------------------------
+  var $ = function (id) { return document.getElementById(id); };
+  function show(which) {
+    ['s-load', 's-form', 's-done', 's-over', 's-err'].forEach(function (id) {
+      $(id).hidden = (id !== which);
+    });
+    $('s-foot').hidden = (which !== 's-form');
+  }
+  function text(el, s) { el.textContent = s == null ? '' : String(s); }
+
+  function fail(head, msg) { text($('err-h'), head); text($('err-p'), msg); show('s-err'); }
+
+  var OVER = {
+    signed:    ['Already signed', 'This consent form has already been signed. Nothing more is needed from you.'],
+    expired:   ['This link has expired', 'For your safety the link works for a limited time only. Please ask the clinic to send you a fresh one.'],
+    cancelled: ['This link was cancelled', 'The clinic cancelled this consent form. Please contact them if you think this is a mistake.'],
+    missing:   ['Link not found', 'This link is not valid. Please check you opened the full link from your WhatsApp message, or ask the clinic to send it again.']
+  };
+  function over(state) {
+    var o = OVER[state] || OVER.missing;
+    text($('over-h'), o[0]); text($('over-p'), o[1]);
+    show(state === 'missing' ? 's-err' : 's-over');
+    if (state === 'missing') fail(o[0], o[1]);
+  }
+
+  // ---- api ----------------------------------------------------------------
+  function api(path, body) {
+    var opt = { method: body ? 'POST' : 'GET', headers: { 'Accept': 'application/json' } };
+    if (body) {
+      // Deliberately text/plain, not application/json. It is a CORS-safelisted
+      // content type, so the browser sends the POST straight away instead of a
+      // preflight OPTIONS — which the API would 404, because no OPTIONS route
+      // exists on it. The Lambda's parseBody() JSON-parses the raw body and
+      // never looks at this header, so the payload is read exactly the same.
+      // The body is still JSON; only the label differs.
+      opt.headers['Content-Type'] = 'text/plain;charset=UTF-8';
+      opt.body = JSON.stringify(body);
+    }
+    return fetch(API + path, opt).then(function (r) {
+      return r.text().then(function (t) {
+        var d = null;
+        try { d = t ? JSON.parse(t) : null; } catch (e) { /* non-JSON */ }
+        return { status: r.status, data: d, raw: t };
+      });
+    });
+  }
+
+  // ---- signature pad -----------------------------------------------------
+  var pad = $('f-pad'), ctx = pad.getContext('2d');
+  var ink = 0, drawing = false, last = null, dpr = 1;
+  var box = null;                       // ink bounding box in CSS px
+  var strokes = [];                     // [[{x,y},...], ...] so a resize can redraw
+
+  function sizePad() {
+    dpr = Math.min(window.devicePixelRatio || 1, 3);
+    var w = pad.clientWidth, h = pad.clientHeight;
+    if (!w || !h) return;
+    pad.width = Math.round(w * dpr);
+    pad.height = Math.round(h * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.lineWidth = 2.6; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.strokeStyle = '#14306b';
+    redraw();
+  }
+  function redraw() {
+    ctx.clearRect(0, 0, pad.clientWidth, pad.clientHeight);
+    strokes.forEach(function (st) {
+      if (st.length < 2) {
+        if (st.length === 1) { ctx.beginPath(); ctx.arc(st[0].x, st[0].y, 1.4, 0, 6.3); ctx.fillStyle = '#14306b'; ctx.fill(); }
+        return;
+      }
+      ctx.beginPath();
+      ctx.moveTo(st[0].x, st[0].y);
+      for (var i = 1; i < st.length; i++) ctx.lineTo(st[i].x, st[i].y);
+      ctx.stroke();
+    });
+  }
+
+  function at(ev) {
+    var r = pad.getBoundingClientRect();
+    return { x: ev.clientX - r.left, y: ev.clientY - r.top };
+  }
+  function grow(p) {
+    if (!box) box = { x0: p.x, y0: p.y, x1: p.x, y1: p.y };
+    else {
+      box.x0 = Math.min(box.x0, p.x); box.y0 = Math.min(box.y0, p.y);
+      box.x1 = Math.max(box.x1, p.x); box.y1 = Math.max(box.y1, p.y);
+    }
+  }
+
+  pad.addEventListener('pointerdown', function (ev) {
+    ev.preventDefault();
+    drawing = true;
+    try { pad.setPointerCapture(ev.pointerId); } catch (e) {}
+    var p = at(ev);
+    last = p; grow(p);
+    strokes.push([p]);
+    $('f-hint').hidden = true;
+    redraw();
+  });
+  pad.addEventListener('pointermove', function (ev) {
+    if (!drawing) return;
+    ev.preventDefault();
+    var pts = (ev.getCoalescedEvents ? ev.getCoalescedEvents() : null);
+    pts = (pts && pts.length) ? pts.map(at) : [at(ev)];
+    var st = strokes[strokes.length - 1];
+    pts.forEach(function (p) {
+      ink += Math.hypot(p.x - last.x, p.y - last.y);
+      ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(p.x, p.y); ctx.stroke();
+      st.push(p); grow(p); last = p;
+    });
+    gate();
+  });
+  function up(ev) {
+    if (!drawing) return;
+    drawing = false;
+    try { pad.releasePointerCapture(ev.pointerId); } catch (e) {}
+    gate();
+  }
+  pad.addEventListener('pointerup', up);
+  pad.addEventListener('pointercancel', up);
+  pad.addEventListener('pointerleave', up);
+
+  $('f-clear').addEventListener('click', function () {
+    ink = 0; box = null; strokes = [];
+    redraw();
+    $('f-hint').hidden = false;
+    $('f-padbox').classList.remove('filled');
+    gate();
+  });
+
+  // White-matted, trimmed to the ink so the signature fills its box in the PDF.
+  function signaturePng() {
+    if (!box) return '';
+    var pad8 = 10;
+    var x0 = Math.max(0, box.x0 - pad8), y0 = Math.max(0, box.y0 - pad8);
+    var x1 = Math.min(pad.clientWidth, box.x1 + pad8), y1 = Math.min(pad.clientHeight, box.y1 + pad8);
+    var w = Math.max(1, Math.round((x1 - x0) * dpr)), h = Math.max(1, Math.round((y1 - y0) * dpr));
+    var out = document.createElement('canvas');
+    out.width = w; out.height = h;
+    var o = out.getContext('2d');
+    o.fillStyle = '#ffffff'; o.fillRect(0, 0, w, h);
+    o.drawImage(pad, Math.round(x0 * dpr), Math.round(y0 * dpr), w, h, 0, 0, w, h);
+    return out.toDataURL('image/png');
+  }
+
+  // ---- submit gating -----------------------------------------------------
+  function why() {
+    if (!$('f-agree').checked) return 'Tick the box above to confirm you agree.';
+    if ($('f-name').value.trim().length < 3) return 'Enter the full name of the person signing.';
+    if (ink < MIN_INK) return 'Draw your signature in the box above.';
+    return '';
+  }
+  function gate() {
+    $('f-padbox').classList.toggle('filled', ink >= MIN_INK);
+    text($('f-padmsg'), ink >= MIN_INK ? 'Signature captured' : 'Use your finger or a stylus');
+    var w = why();
+    $('f-submit').disabled = !!w || sending;
+    var el = $('f-why');
+    el.className = 'why';
+    text(el, sending ? '' : w);
+  }
+  $('f-agree').addEventListener('change', gate);
+  $('f-name').addEventListener('input', gate);
+  $('f-role').addEventListener('change', gate);
+
+  var sending = false;
+  $('f-submit').addEventListener('click', function () {
+    if (sending || why()) return;
+    var png = signaturePng();
+    if (!png) { gate(); return; }
+    if (png.length > MAX_BYTES) {
+      var el0 = $('f-why'); el0.className = 'why bad';
+      text(el0, 'That signature is too detailed to send. Tap Clear and sign a little more simply.');
+      return;
+    }
+    sending = true;
+    $('f-submit').textContent = 'Submitting…';
+    gate();
+
+    api('/c/' + encodeURIComponent(token) + '/sign', {
+      signaturePng: png,
+      signerName: $('f-name').value.trim(),
+      signerRole: $('f-role').value
+    }).then(function (r) {
+      if (r.status === 200 && r.data && r.data.ok) {
+        if (r.data.already) text($('done-msg'), 'This form was already signed. Nothing more is needed from you.');
+        show('s-done');
+        window.scrollTo(0, 0);
+        return;
+      }
+      if (r.status === 404) { over('missing'); return; }
+      if (r.status === 400 && r.data && r.data.state && r.data.state !== 'live') { over(r.data.state); return; }
+
+      sending = false;
+      $('f-submit').textContent = 'Submit consent';
+      var el = $('f-why'); el.className = 'why bad';
+      text(el, (r.data && r.data.error) || 'Could not submit. Please check your connection and try again.');
+      gate();
+      $('f-submit').disabled = false;
+    }).catch(function () {
+      sending = false;
+      $('f-submit').textContent = 'Submit consent';
+      var el = $('f-why'); el.className = 'why bad';
+      text(el, 'No internet connection. Your signature is still here — try again.');
+      $('f-submit').disabled = false;
+    });
+  });
+
+  // ---- load --------------------------------------------------------------
+  function fmtDate(iso) {
+    if (!iso) return '';
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return '';
+    return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+  function fmtExpiry(iso) {
+    if (!iso) return '';
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return '';
+    var mins = Math.round((d.getTime() - Date.now()) / 60000);
+    if (mins <= 0) return '';
+    if (mins < 60) return 'Valid for ' + mins + ' more minute' + (mins === 1 ? '' : 's');
+    var hrs = Math.round(mins / 60);
+    return 'Valid for about ' + hrs + ' more hour' + (hrs === 1 ? '' : 's');
+  }
+
+  function paint(c) {
+    text($('f-title'), c.title || 'Consent form');
+
+    var bits = [];
+    if (c.patientName) bits.push('For ' + c.patientName);
+    if (c.treatment) bits.push(c.treatment);
+    if (c.sentAt) bits.push(fmtDate(c.sentAt));
+    $('f-meta').innerHTML = '';
+    text($('f-meta'), bits.join(' · '));
+
+    text($('f-body'), c.bodyText || '');
+
+    var risks = Array.isArray(c.risks) ? c.risks.filter(Boolean) : [];
+    $('f-risks-card').hidden = risks.length === 0;
+    $('f-risks').innerHTML = '';
+    risks.forEach(function (r) {
+      var li = document.createElement('li');
+      text(li, r);
+      $('f-risks').appendChild(li);
+    });
+
+    if (c.patientName) $('f-name').value = c.patientName;
+
+    var exp = fmtExpiry(c.expiresAt);
+    if (exp) text($('secure'), exp);
+
+    show('s-form');
+    sizePad();
+    gate();
+  }
+
+  if (!token) {
+    fail('Link incomplete',
+      'This address has no consent code in it. Please open the full link from your WhatsApp message.');
+    return;
+  }
+
+  api('/c/' + encodeURIComponent(token)).then(function (r) {
+    if (r.status === 200 && r.data && r.data.ok && r.data.state === 'live' && r.data.consent) {
+      paint(r.data.consent);
+      return;
+    }
+    if (r.data && r.data.state) { over(r.data.state); return; }
+    if (r.status === 404) { over('missing'); return; }
+    fail('Could not open this form', 'Please try again in a moment, or ask the clinic to resend the link.');
+  }).catch(function () {
+    fail('No internet connection', 'Please reconnect and reload this page.');
+  });
+
+  var t = null;
+  window.addEventListener('resize', function () {
+    clearTimeout(t);
+    t = setTimeout(function () { if (!$('s-form').hidden) sizePad(); }, 150);
+  });
+})();
+</script>
+</body>
+</html>

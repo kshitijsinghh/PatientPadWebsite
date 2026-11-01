@@ -1,0 +1,16 @@
+{
+  "rewrites": [
+    {
+      "source": "/consent/:token",
+      "destination": "/consent.html"
+    },
+    {
+      "source": "/api/c/:token",
+      "destination": "https://x5s4btnwek.execute-api.us-east-1.amazonaws.com/c/:token"
+    },
+    {
+      "source": "/api/c/:token/sign",
+      "destination": "https://x5s4btnwek.execute-api.us-east-1.amazonaws.com/c/:token/sign"
+    }
+  ]
+}
