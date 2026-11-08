@@ -1,0 +1,16 @@
+{
+  "name": "PatientPad",
+  "short_name": "PatientPad",
+  "description": "AI-powered dental clinic and patient management software",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#f4f8f7",
+  "theme_color": "#0e3b39",
+  "icons": [
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

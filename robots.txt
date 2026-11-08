@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /consent/
+Disallow: /api/
+
+Sitemap: https://patientpad.in/sitemap.xml
