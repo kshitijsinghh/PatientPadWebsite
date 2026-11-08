@@ -241,6 +241,7 @@ html:not(.js) .panel+.panel{margin-top:24px}
 .dialog-head p{margin:0;font-size:15px;color:var(--muted)}
 .x{flex:none;cursor:pointer;width:38px;height:38px;border-radius:50%;border:0;background:var(--tint);font-size:20px;line-height:1;color:var(--deep)}
 #demo-form{display:flex;flex-direction:column;gap:14px}
+#demo-form[hidden],.dialog-head p[hidden]{display:none}
 .fld{display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:600}
 .fld .opt{font-weight:400;color:var(--muted)}
 .fld input,.fld textarea{font-size:16px;font-weight:400;padding:13px 14px;border-radius:12px;border:1.5px solid var(--line);background:#fff;color:var(--deep);outline:none}
@@ -626,7 +627,7 @@ var SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxAw53AViPpAyyBByd
   }
   function closeDemo() {
     modal.hidden = true; document.body.style.overflow = '';
-    if (!done.hidden) { form.reset(); form.hidden = false; done.hidden = true; tried = false; showErrs({}); }
+    if (!done.hidden) { form.reset(); form.hidden = false; done.hidden = true; modal.querySelector('.dialog-head p').hidden = false; tried = false; showErrs({}); }
     if (lastFocus) lastFocus.focus();
   }
   document.querySelectorAll('[data-open-demo]').forEach(function (b) { b.addEventListener('click', openDemo); });
@@ -673,7 +674,7 @@ var SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxAw53AViPpAyyBByd
     var finish = function () {
       var first = form.fullName.value.trim().split(/\s+/).filter(function (w) { return !/^dr\.?$/i.test(w); })[0];
       document.getElementById('demo-thanks').textContent = 'Thank you' + (first ? ', ' + first : '') + '.';
-      form.hidden = true; done.hidden = false; done.querySelector('button').focus();
+      form.hidden = true; done.hidden = false; modal.querySelector('.dialog-head p').hidden = true; done.querySelector('button').focus();
       submitBtn.disabled = false; submitBtn.textContent = 'Request my demo';
     };
     if (form.website.value) return finish();
